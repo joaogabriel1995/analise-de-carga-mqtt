@@ -1,0 +1,23 @@
+services:
+  master:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/python/simulator/src
+      - ./.env:/python/simulator/.env
+    ports:
+      - "8089:8089"
+    command: locust -f locustfile_tls.py --master -H http://master:8089
+  
+  worker:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/python/simulator/src
+      - ./.env:/python/simulator/.env
+      - ./data:/python/simulator/data
+
+    command: locust -f locustfile_tls.py --worker --master-host master
+
